@@ -1,5 +1,6 @@
 """
 用coroutine实现pipeline
+多路pipeline
 """
 
 
@@ -35,7 +36,13 @@ def printer():                                # sink, 用于最终接受数据, 
         line = yield
         print(line)
 
+@coroutine
+def broadcast(targets):
+    while True:
+        line = yield
+        for target in targets:
+            target.send(line)
 
 if __name__ == '__main__':
     with open('log.log') as f:
-        follow(f, grep('python', printer()))
+        follow(f, broadcast([grep('gao', printer()), grep('guo', printer()), grep('wei', printer())]))

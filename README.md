@@ -9,3 +9,4 @@ Tags:
 - coroutine_decorator. 手动写coroutine装饰器, 使得coroutine可以直接使用.
 - exception. 捕抓close引起得异常
 - pipeine. 一条线的pipeline
+- multi-pipe. 多路pipe
