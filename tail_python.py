@@ -1,4 +1,5 @@
 """
+加上一个装饰器, 这样coroutine就不用primed了
 这里把grep变成了一个coroutine, 区别在于用了=yield, 使得func可consum数据而不仅仅是产生数据
 """
 
@@ -14,6 +15,15 @@ def follow(the_file):
             continue
         yield line
 
+def coroutine(func):                # 装饰器, 使得从routine可以直接使用, 不用primed
+    def wrapper(*args, **kwargs):
+        c = func(*args, **kwargs)
+        c.send(None)
+        return c
+    return wrapper
+
+ 
+@coroutine                           # 加上装饰器
 def grep(pattern):                   # 这个coroutine在命令行中执行效果更佳, coroutine在send真实数据之前, 一定要send(None)或next()
     while True:
         line = yield
