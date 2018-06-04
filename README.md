@@ -13,3 +13,4 @@ Tags:
 - Task. 创建任务类, 把target(generator或coroutine变成Task对象)
 - multasking. 第一个multitasking的os
 - task_exit. 处理任务退出
+- task_management. 增加两个System Call. 一个是创建新任务, 一个是删除任务.
