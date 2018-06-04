@@ -10,3 +10,5 @@ Tags:
 - exception. 捕抓close引起得异常
 - pipeine. 一条线的pipeline
 - multi-pipe. 多路pipe
+- Task. 创建任务类, 把target(generator或coroutine变成Task对象)
+- multasking. 第一个multitasking的os
