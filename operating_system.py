@@ -27,6 +27,10 @@ class Schedualer:
         self.task_map[task.tid] = task
         return task.tid
 
+    def exit(self, task):
+        del self.task_map[task.tid]
+        print('Task {} exit'.format(task.tid))
+
     def schedual(self, task):
         self.ready.put(task)
 
@@ -34,7 +38,11 @@ class Schedualer:
     def main_loop(self):
         while True:
             task = self.ready.get()            # 把task从queue中取出, 这时queue少了一个任务
-            result = task.run()                # 把task运行的结果, 即task的yield右边的表达式返回值赋给result. 这里是后面才用到
+            try:
+                result = task.run()                # 把task运行的结果, 即task的yield右边的表达式返回值赋给result. 这里是后面才用到
+            except StopIteration:
+                self.exit(task)
+                continue
             self.schedual(task)                # 把task再放回队列中
 
 def foo():
@@ -44,7 +52,7 @@ def foo():
         yield
 
 def bar():
-    while True:
+    for _ in range(5):
         print('I am bar')
         time.sleep(0.5)
         yield

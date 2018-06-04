@@ -12,3 +12,4 @@ Tags:
 - multi-pipe. 多路pipe
 - Task. 创建任务类, 把target(generator或coroutine变成Task对象)
 - multasking. 第一个multitasking的os
+- task_exit. 处理任务退出
