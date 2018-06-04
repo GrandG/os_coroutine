@@ -1,6 +1,8 @@
 """
 这是一个实时监测文件内容的程序.
 当目标文件的新增内容时, 该程序就会打印出新增的内容
+
+这里用generator实现pipeline, 即follow的输出结果, 作为grep的输入
 """
 
 
@@ -15,8 +17,13 @@ def follow(the_file):
             continue
         yield line
 
+def grep(pattern, lines):
+    for line in lines:
+        if pattern in line:
+            yield line
+
 
 if __name__ == '__main__':
     with open('log.log', encoding='utf-8') as f:
-        for line in follow(f):
+        for line in grep('python', follow(f)):
             print(line)
