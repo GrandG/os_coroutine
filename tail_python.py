@@ -25,10 +25,13 @@ def coroutine(func):                # 装饰器, 使得从routine可以直接使
  
 @coroutine                           # 加上装饰器
 def grep(pattern):                   # 这个coroutine在命令行中执行效果更佳, coroutine在send真实数据之前, 一定要send(None)或next()
-    while True:
-        line = yield
-        if pattern in line:
-            print(line)
+    try:
+        while True:
+            line = yield
+            if pattern in line:
+                print(line)
+    except GeneratorExit:
+        print('Grep close, goodbye')
 
 
 if __name__ == '__main__':
