@@ -1,8 +1,5 @@
 """
-这是一个实时监测文件内容的程序.
-当目标文件的新增内容时, 该程序就会打印出新增的内容
-
-这里用generator实现pipeline, 即follow的输出结果, 作为grep的输入
+这里把grep变成了一个coroutine, 区别在于用了=yield, 使得func可consum数据而不仅仅是产生数据
 """
 
 
@@ -17,10 +14,11 @@ def follow(the_file):
             continue
         yield line
 
-def grep(pattern, lines):
-    for line in lines:
+def grep(pattern):                   # 这个coroutine在命令行中执行效果更佳, coroutine在send真实数据之前, 一定要send(None)或next()
+    while True:
+        line = yield
         if pattern in line:
-            yield line
+            print(line)
 
 
 if __name__ == '__main__':
