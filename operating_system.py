@@ -6,6 +6,7 @@
 """
 import time
 from queue import Queue
+import socket
 
 
 class Task:                                       # 把target(generator或coroutie)变成Task对象, Task在这里主要是维护一个task_id. 还有维护一个sendval, 这个在以后用到.
@@ -138,9 +139,32 @@ def some_task():
     else:
         print('Task can not be deleted or task does not exit')
 
+def handle_client(client, addr):
+    print('Conecting from {}'.format(addr))
+    while True:
+        data = client.recv(1024)
+        if data:
+            client.send(data)
+        else:
+            break
+    client.close()
+    print('Client close')
+    yield
+
+def server(port):
+    print('Server starting...')
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.bind(('127.0.0.1', port))                                  # bind接受的是一个tuple
+    sock.listen(5)
+
+    while True:
+        client, addr = sock.accept()
+        yield NewTask(handle_client(client, addr))                  # handle_client是另一个任务
+
 if __name__ == '__main__':
     sched = Schedualer()
     sched.new(foo())
-    sched.new(bar())
-    sched.new(some_task())
+    # sched.new(bar())
+    # sched.new(some_task())
+    sched.new(server(44444))
     sched.main_loop()
