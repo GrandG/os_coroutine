@@ -1,10 +1,8 @@
 """
-第一个System call
-可以看出: 
-1. Target与Schudual完全没有关系, 编写target函数的时候, 完全不用考虑Schedual
-2. Target函数可能会调用System call
-3. Schedualer与System Call有紧密的联系
-4. System Call相当于从Schedualer分离出来的方法
+增加一个System call, 用于等待某个任务执行完后再执行
+1. 建立一个全局变量self.exit_waiting, key是被等待task的tid, calue是等待的task的列表
+2. 建立WaitTask 的System call
+3. 改写exit方法, 当被等待的task退出后, 把exit_waiting中对应的task重新加入queue 
 """
 import time
 from queue import Queue
@@ -25,7 +23,7 @@ class SystemCall:
     def __init__(self):
         pass
 
-    def handle(self):
+    def handle(self):                              # 通常情况下, handle里必须包括把现在取出的task, 放回到queue中, 即包含self.schedual(task)语句
         pass
 
 class GetTid(SystemCall):                          # System call
@@ -60,10 +58,21 @@ class KillTask(SystemCall):
             self.sched.sendval = False
         self.sched.schedual(self.task)
 
+
+class WaitTask(SystemCall):
+    def __init__(self, tid):
+        self.tid = tid
+
+    def handle(self):
+        result = self.sched.waitforexit(self.task, self.tid)
+        if not result:
+            self.sched.schedual(self.task)
+
 class Schedualer:
     def __init__(self):
         self.ready = Queue()                  # 阻塞队列
         self.task_map = {}                    # 这里现在还没用到
+        self.exit_waiting = {}
 
     def new(self, target):                    # 创建一个新的task, 把target变为task对象, 在放到queue和task_map中
         task = Task(target)
@@ -74,6 +83,16 @@ class Schedualer:
     def exit(self, task):
         del self.task_map[task.tid]
         print('Task {} exit'.format(task.tid))
+        
+        if task.tid in self.exit_waiting:
+            [self.schedual(task) for task in self.exit_waiting.get(task.tid)]
+
+
+    def waitforexit(self, task, tid):         # 在要等待的task退出之后, 在exit_waiting中把对应的等待的task重新加入queue中
+        if tid in self.task_map:
+            self.exit_waiting.setdefault(tid, []).append(task)
+            return True
+        return False
 
     def schedual(self, task):
         self.ready.put(task)
@@ -110,6 +129,7 @@ def bar():
 
 def some_task():
     task_id = yield NewTask(bar())
+    yield WaitTask(task_id)
     for _ in range(3):
         yield
     result = yield KillTask(task_id)
