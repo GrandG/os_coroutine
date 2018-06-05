@@ -16,3 +16,4 @@ Tags:
 - task_management. 增加两个System Call. 一个是创建新任务, 一个是删除任务.
 - task_waiting. 增加一个等待task的system call
 - echo_server. 实现一个web server, 但是os被挂起.
+- echo_server_note. 增加一些注释.

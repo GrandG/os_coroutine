@@ -1,8 +1,8 @@
 """
-增加一个System call, 用于等待某个任务执行完后再执行
-1. 建立一个全局变量self.exit_waiting, key是被等待task的tid, calue是等待的task的列表
-2. 建立WaitTask 的System call
-3. 改写exit方法, 当被等待的task退出后, 把exit_waiting中对应的task重新加入queue 
+在上一个例子中, IO operation block的有:
+1. client, addr = sock.accept()
+2. data = client.recv(1024)
+3. client.send(data)
 """
 import time
 from queue import Queue
