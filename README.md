@@ -17,3 +17,4 @@ Tags:
 - task_waiting. 增加一个等待task的system call
 - echo_server. 实现一个web server, 但是os被挂起.
 - echo_server_note. 增加一些注释.
+- Sentence. 实现一个可迭代对象
