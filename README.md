@@ -20,3 +20,4 @@ Tags:
 - Sentence. 实现一个可迭代对象
 - Sentence_2. 根据可迭代设计模式, 重构Sentence可迭代对象, 新增SentencIterator迭代器.
 - Sentence_3.用python的方式重构实现Iterable. 
+- Sentence_4.实现Setence的Lazy版本, 即迭代的时候才生成具体的值. 

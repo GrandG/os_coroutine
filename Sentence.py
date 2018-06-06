@@ -1,5 +1,5 @@
 """
-1. 用Python的方式实现Sentence可迭代对象: 不实现SentenceIteraot, 而在Senternce的__iter__实现一个生成器
+1. 实现Sentence的lazy版本. 之前的做法在构造函数的时候直接生成了要迭代的所有的值. 现在实现只有当迭代的时候在生成具体的值
 """
 import re
 import reprlib
@@ -11,13 +11,11 @@ RE_WORD = re.compile('\w+')
 class Sentence:
     def __init__(self, text):
         self.text = text
-        self.word = RE_WORD.findall(text)
 
-    def __iter__(self):                              # 这里可以用iter(self.word)直接实现
-        for word in self.word:
-            yield word
-
-        return                                       # 这一句可以不要
+    def __iter__(self):                              
+        for word in RE_WORD.finditer(self.text):          # finditer是findall的lazy版本
+            yield word.group()                            # 这里调用group返回具体文本
+        return
 
     def __repr__(self):
         return 'Sentence is {}'.format(reprlib.repr(self.text))
