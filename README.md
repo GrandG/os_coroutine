@@ -22,4 +22,4 @@ Tags:
 - Sentence_3.用python的方式重构实现Iterable. 
 - Sentence_4.实现Setence的Lazy版本, 即迭代的时候才生成具体的值. 
 - Sentence_5.用生成器表达式语法糖改写```__iter__```方法. 
-
+- yield_from. 使用yield_from的一个例子
